@@ -1,4 +1,4 @@
-# holanda_app
+# herbaria_app
 
 A new Flutter project.
 
