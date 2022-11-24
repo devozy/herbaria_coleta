@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import '../sqlite/coleta_db.dart';
 import 'dart:async';
-import '../sqlite/db_helperColeta.dart';
+import '../sqlite/db_helperPlanta.dart';
+import '../sqlite/planta_db.dart';
+
+int cur_coletaId;
 
 class PlantaPage extends StatefulWidget {
-  final String title;
 
-  PlantaPage({Key key, this.title}) : super(key: key);
+  PlantaPage(int coleta)
+  {
+   cur_coletaId = coleta;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -15,67 +19,92 @@ class PlantaPage extends StatefulWidget {
 }
 
 class _PlantaPageState extends State<PlantaPage> {
-  //
-  Future<List<ColetaDB>> coletas;
-  TextEditingController controllerProjeto = TextEditingController();
-  TextEditingController controllerColetor = TextEditingController();
-  TextEditingController controllerEstado = TextEditingController();
-  TextEditingController controllerMunicipio = TextEditingController();
-  TextEditingController controllerData = TextEditingController();
+  Future<List<PlantaDB>> plantas;
+  TextEditingController controllerNumeroColeta = TextEditingController();
+  TextEditingController controllerFamilia = TextEditingController();
+  TextEditingController controllerGenero = TextEditingController();
+  TextEditingController controllerEpiteto = TextEditingController();
+  TextEditingController controllerAltura = TextEditingController();
+  TextEditingController controllerFlor = TextEditingController();
+  TextEditingController controllerFruto = TextEditingController();
+  TextEditingController controllerSubstrato = TextEditingController();
+  TextEditingController controllerAmbiente = TextEditingController();
+  TextEditingController controllerRelevo = TextEditingController();
+  TextEditingController controllerCoordenada = TextEditingController();
+  TextEditingController controllerObservacao = TextEditingController();
 
-  int curColetaId;
-  String projeto;
-  String coletor;
-  String estado;
-  String municipio;
-  String data;
+  int curPlantaId;
+  int numeroColeta;
+  String familia;
+  String genero;
+  String epiteto;
+  double altura;
+  String flor;
+  String fruto;
+  String substrato;
+  String ambiente;
+  int relevo;
+  String coordenada;
+  String observacao;
+  int idColeta;
 
   final formKey = new GlobalKey<FormState>();
   var dbHelper;
   bool isUpdating;
 
+
   @override
   void initState() {
     super.initState();
-    dbHelper = DBHelperColeta();
+    dbHelper = DBHelperPlanta(cur_coletaId);
     isUpdating = false;
     refreshList();
   }
 
   refreshList() {
     setState(() {
-      coletas = dbHelper.getColeta();
+      plantas = dbHelper.getPlanta();
     });
   }
 
   clearAll() {
-    controllerProjeto.text = '';
-    controllerColetor.text = '';
-    controllerEstado.text = '';
-    controllerMunicipio.text = '';
-    controllerData.text = '';
+    controllerNumeroColeta.text = '';
+    controllerFamilia.text = '';
+    controllerGenero.text = '';
+    controllerEpiteto.text = '';
+    controllerAltura.text = '';
+    controllerFlor.text = '';
+    controllerFruto.text = '';
+    controllerSubstrato.text = '';
+    controllerAmbiente.text = '';
+    controllerRelevo.text = '';
+    controllerCoordenada.text = '';
+    controllerObservacao.text = '';
   }
 
   validate() {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       if (isUpdating) {
-        ColetaDB e = ColetaDB(curColetaId, projeto, coletor, estado, municipio, data);
+        PlantaDB e = PlantaDB(curPlantaId, numeroColeta, familia, genero, epiteto, altura, flor, fruto, substrato, ambiente, relevo, coordenada, observacao, cur_coletaId );
         dbHelper.update(e);
         setState(() {
           isUpdating = false;
         });
       } else {
-        ColetaDB e = ColetaDB(curColetaId,projeto, coletor, estado, municipio, data);
+        PlantaDB e = PlantaDB(curPlantaId, numeroColeta, familia, genero, epiteto, altura, flor, fruto, substrato, ambiente, relevo, coordenada, observacao, cur_coletaId);
         dbHelper.save(e);
       }
       clearAll();
-      refreshList();
+   //   refreshList();
     }
   }
-
   form() {
-    return Form(
+    return
+    Flexible(
+        child:
+        SingleChildScrollView(
+        child: Form(
       key: formKey,
       child: Padding(
         padding: EdgeInsets.all(15.0),
@@ -86,72 +115,162 @@ class _PlantaPageState extends State<PlantaPage> {
           children: <Widget>[
             TextFormField(
               decoration: const InputDecoration(
-                  labelText: 'Projeto',
+                  labelText: 'Nº de Coleta',
                   focusedBorder: OutlineInputBorder(
                     borderSide:
                     BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
-              controller: controllerProjeto,
+              controller: controllerNumeroColeta,
               keyboardType: TextInputType.text,
-//              validator: (val) => val.length == 0 ? 'Enter Name' : null,
-              onSaved: (val) => projeto = val,
+  //            validator: (val) => val.length == 0 ? 'Número de coleta obrigatório!' : null,
+              onSaved: (val) => numeroColeta = val as int,
             ),
             const Espaco(),
             TextFormField(
               decoration: const InputDecoration(
-                  labelText: 'Coletor',
+                  labelText: 'Familia',
                   focusedBorder: OutlineInputBorder(
                     borderSide:
                     BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
-              controller: controllerColetor,
+              controller: controllerFamilia,
               keyboardType: TextInputType.text,
-//              validator: (val) => val.length == 0 ? 'Enter Name' : null,
-              onSaved: (val) => coletor = val,
+              onSaved: (val) => familia = val,
             ),
             const Espaco(),
             TextFormField(
               decoration: const InputDecoration(
-                  labelText: 'Estado',
+                  labelText: 'Genero',
                   focusedBorder: OutlineInputBorder(
                     borderSide:
                     BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
-              controller: controllerEstado,
+              controller: controllerGenero,
               keyboardType: TextInputType.text,
 //              validator: (val) => val.length == 0 ? 'Enter Name' : null,
-              onSaved: (val) => estado = val,
+              onSaved: (val) => genero = val,
             ),
             const Espaco(),
             TextFormField(
               decoration: const InputDecoration(
-                  labelText: 'Município',
+                  labelText: 'Epíteto',
                   focusedBorder: OutlineInputBorder(
                     borderSide:
                     BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
-              controller: controllerMunicipio,
+              controller: controllerEpiteto,
               keyboardType: TextInputType.text,
 //              validator: (val) => val.length == 0 ? 'Enter Name' : null,
-              onSaved: (val) => municipio = val,
+              onSaved: (val) => epiteto = val,
             ),
             const Espaco(),
             TextFormField(
               decoration: const InputDecoration(
-                  labelText: 'Data',
+                  labelText: 'Altura',
                   focusedBorder: OutlineInputBorder(
                     borderSide:
                     BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
-              controller: controllerData,
+              controller: controllerAltura,
               keyboardType: TextInputType.text,
 //              validator: (val) => val.length == 0 ? 'Enter Name' : null,
-              onSaved: (val) => data = val,
+              onSaved: (val) => altura = val as double,
+            ),
+            const Espaco(),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Flor',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                  ),
+                  border: OutlineInputBorder()),
+              controller: controllerFlor,
+              keyboardType: TextInputType.text,
+              onSaved: (val) => flor = val,
+            ),
+            const Espaco(),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Fruto',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                  ),
+                  border: OutlineInputBorder()),
+              controller: controllerFruto,
+              keyboardType: TextInputType.text,
+              onSaved: (val) => fruto = val,
+            ),
+            const Espaco(),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Substrato',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                  ),
+                  border: OutlineInputBorder()),
+              controller: controllerSubstrato,
+              keyboardType: TextInputType.text,
+              onSaved: (val) => substrato = val,
+            ),
+            const Espaco(),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Ambiente',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                  ),
+                  border: OutlineInputBorder()),
+              controller: controllerAmbiente,
+              keyboardType: TextInputType.text,
+              onSaved: (val) => ambiente = val,
+            ),
+            const Espaco(),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Relevo',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                  ),
+                  border: OutlineInputBorder()),
+              controller: controllerRelevo,
+              keyboardType: TextInputType.text,
+              onSaved: (val) => relevo = val as int,
+            ),
+            const Espaco(),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Coordenada',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                  ),
+                  border: OutlineInputBorder()),
+              controller: controllerCoordenada,
+              keyboardType: TextInputType.text,
+              onSaved: (val) => coordenada = val,
+            ),
+            const Espaco(),
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Observação',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                  ),
+                  border: OutlineInputBorder()),
+              controller: controllerObservacao,
+              keyboardType: TextInputType.text,
+              onSaved: (val) => observacao = val,
             ),
             const Espaco(),
             Row(
@@ -159,7 +278,8 @@ class _PlantaPageState extends State<PlantaPage> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed:validate,
-                  child: Text(isUpdating ? 'ATUALIZAR' : 'ADICIONAR'),
+                  child: Text('ADICIONAR'),
+
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -169,132 +289,19 @@ class _PlantaPageState extends State<PlantaPage> {
                     FocusScope.of(context).unfocus();
                     clearAll();
                   },
-
                   child: Text('CANCELAR'),
                 )
               ],
             ),
+
           ],
         ),
       ),
+    )
+      )
     );
-  }
+}
 
-  SingleChildScrollView dataTable(List<ColetaDB> coletas) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: DataTable(
-          columnSpacing: 14.0,
-          headingTextStyle: TextStyle(
-            fontSize: 15.0,
-            color: Colors.black87,
-            fontWeight: FontWeight.w600),
-        columns: [
-          DataColumn(
-            label: Text('PROJETO', ),
-          ),
-          DataColumn(
-            label: Text('COLETOR'),
-          ),
-          DataColumn(
-            label: Text('UF'),
-          ),
-          DataColumn(
-            label: Text('CIDADE'),
-          ),
-          DataColumn(
-            label: Text('DATA'),
-          ),
-          DataColumn(
-
-            label: Text(''),
-          )
-        ],
-        rows: coletas
-            .map(
-              (coleta) => DataRow(cells: [
-            DataCell(
-              Text('${coleta.projeto}'),
-              onTap: () {
-                setState(() {
-                  isUpdating = true;
-                  curColetaId = coleta.id;
-                });
-                controllerProjeto.text = coleta.projeto;
-              },
-            ),
-                DataCell(
-                  Text('${coleta.coletor}'),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    controllerColetor.text = coleta.coletor;
-                  },
-                ),
-                DataCell(
-                  Text(coleta.estado),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    controllerEstado.text = coleta.estado;
-                  },
-                ),
-                DataCell(
-                  Text(coleta.municipio),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    controllerMunicipio.text = coleta.municipio;
-                  },
-                ),
-                DataCell(
-                  Text(coleta.data),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    controllerData.text = coleta.data;
-                  },
-                ),
-                DataCell(IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                dbHelper.delete(coleta.id);
-                refreshList();
-              },
-            )),
-          ]),
-        )
-            .toList(),
-      ),
-    );
-  }
-
-  list() {
-    return Expanded(
-      child: FutureBuilder(
-        future: coletas,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return dataTable(snapshot.data);
-          }
-
-          if (null == snapshot.data || snapshot.data.length == 0) {
-            return Text("No Data Found");
-          }
-
-          return CircularProgressIndicator();
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,7 +312,7 @@ class _PlantaPageState extends State<PlantaPage> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("Lista de Coletas"),
+        title: Text("Novo Espécime"),
         centerTitle: true,
       ),
 
@@ -316,7 +323,6 @@ class _PlantaPageState extends State<PlantaPage> {
           verticalDirection: VerticalDirection.down,
           children: <Widget>[
             form(),
-            list(),
 
         ],
         ),

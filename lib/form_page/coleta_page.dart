@@ -3,10 +3,12 @@ import '../sqlite/coleta_db.dart';
 import 'dart:async';
 import '../sqlite/db_helperColeta.dart';
 
-class ColetaPage extends StatefulWidget {
-  final String title;
 
-  ColetaPage({Key key, this.title}) : super(key: key);
+class ColetaPage extends StatefulWidget {
+
+
+   ColetaPage(String testando);
+
 
   @override
   State<StatefulWidget> createState() {
@@ -15,7 +17,6 @@ class ColetaPage extends StatefulWidget {
 }
 
 class _ColetaPageState extends State<ColetaPage> {
-  //
   Future<List<ColetaDB>> coletas;
   TextEditingController controllerProjeto = TextEditingController();
   TextEditingController controllerColetor = TextEditingController();
@@ -29,6 +30,7 @@ class _ColetaPageState extends State<ColetaPage> {
   String estado;
   String municipio;
   String data;
+
 
   final formKey = new GlobalKey<FormState>();
   var dbHelper;
@@ -57,6 +59,7 @@ class _ColetaPageState extends State<ColetaPage> {
   }
 
   validate() {
+    
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       if (isUpdating) {
@@ -160,6 +163,7 @@ class _ColetaPageState extends State<ColetaPage> {
                 ElevatedButton(
                   onPressed:validate,
                   child: Text(isUpdating ? 'ATUALIZAR' : 'ADICIONAR'),
+
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -169,8 +173,6 @@ class _ColetaPageState extends State<ColetaPage> {
                     FocusScope.of(context).unfocus();
                     clearAll();
                   },
-
-
                   child: Text('CANCELAR'),
                 )
               ],
@@ -183,14 +185,21 @@ class _ColetaPageState extends State<ColetaPage> {
 
   SingleChildScrollView dataTable(List<ColetaDB> coletas) {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+        scrollDirection: Axis.vertical,
+        child: Container(
+          alignment: AlignmentDirectional.centerStart,
+          width: 600,
+
       child: DataTable(
-          columnSpacing: 14.0,
-          headingTextStyle: TextStyle(
+
+          columnSpacing: 6.0,
+          headingTextStyle: const TextStyle(
             fontSize: 15.0,
             color: Colors.black87,
             fontWeight: FontWeight.w600),
-        columns: [
+        columns:
+
+        [
           DataColumn(
             label: Text('PROJETO', ),
           ),
@@ -207,7 +216,6 @@ class _ColetaPageState extends State<ColetaPage> {
             label: Text('DATA'),
           ),
           DataColumn(
-
             label: Text(''),
           )
         ],
@@ -255,7 +263,7 @@ class _ColetaPageState extends State<ColetaPage> {
                   },
                 ),
                 DataCell(
-                  Text(coleta.data),
+                  Text('${coleta.data}'),
                   onTap: () {
                     setState(() {
                       isUpdating = true;
@@ -275,6 +283,7 @@ class _ColetaPageState extends State<ColetaPage> {
         )
             .toList(),
       ),
+    )
     );
   }
 

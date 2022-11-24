@@ -16,6 +16,7 @@ class DBHelperColeta {
   static const String TABLE = 'ColetaDB';
   static const String DB_NAME = 'coleta1.db';
 
+
   Future<Database> get db async {
     if (_db != null) {
       return _db;
@@ -44,9 +45,7 @@ class DBHelperColeta {
     //   var query = "INSERT INTO $TABLE ($PROJETO, $COLETOR, $ESTADO) VALUES ('${coleta.projeto}', '${coleta.coletor}', '${coleta.projeto}' )";
     //   return await txn.rawInsert(query);
     // });
-
     return coleta;
-
   }
 
   Future<List<ColetaDB>> getColeta() async {

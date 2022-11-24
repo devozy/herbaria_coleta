@@ -1,20 +1,39 @@
 import 'dart:async';
 import 'dart:io' as io;
+import 'package:herbaria_coleta/sqlite/planta_db.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'coleta_db.dart';
+
+import '../form_page/planta_page.dart';
+
 
 class DBHelperPlanta {
+  String id_Coleta;
+  DBHelperPlanta(int cur_coletaId0)
+  {
+    id_Coleta = cur_coletaId as String;
+  }
+String nomeTabela;
+
   static Database _db;
   static const String ID = 'id';
-  static const String PROJETO = 'projeto';
-  static const String COLETOR = 'coletor';
-  static const String ESTADO = 'estado';
-  static const String MUNICIPIO = 'municipio';
-  static const String DATA = 'data';
-  static const String TABLE = 'ColetaDB';
+  static const String NUMERO_COLETA = 'numeroColeta';
+  static const String FAMILIA = 'familia';
+  static const String GENERO = 'genero';
+  static const String EPITETO = 'epiteto';
+  static const String ALTURA = 'altura';
+  static const String FLOR = 'flor';
+  static const String FRUTO = 'fruto';
+  static const String SUBSTRATO = 'substrato';
+  static const String AMBIENTE = 'ambiente';
+  static const String COORDENADA = 'coordenada';
+  static const String RELEVO = 'relevo';
+  static const String OBSERVACAO = 'obervacao';
+  static const String ID_COLETA = 'idColeta';
+  static const String TABLE = 'coletaX';
   static const String DB_NAME = 'coleta1.db';
+
 
   Future<Database> get db async {
     if (_db != null) {
@@ -33,33 +52,35 @@ class DBHelperPlanta {
 
   _onCreate(Database db, int version) async {
     await db
-        .execute("CREATE TABLE $TABLE ($ID INTEGER PRIMARY KEY, $PROJETO TEXT, $COLETOR TEXT, $ESTADO TEXT, $MUNICIPIO TEXT, $DATA TEXT)");
+        .execute("CREATE TABLE $nomeTabela ($ID INTEGER PRIMARY KEY, $NUMERO_COLETA TEXT, $FAMILIA TEXT, $GENERO TEXT, $EPITETO TEXT, $ALTURA TEXT, $FLOR TEXT, $FRUTO TEXT, $SUBSTRATO TEXT, $AMBIENTE TEXT, $RELEVO TEXT, $COORDENADA TEXT, $OBSERVACAO TEXT, $ID_COLETA TEXT  )");
   }
 
-  Future<ColetaDB> save(ColetaDB coleta) async {
+  Future<PlantaDB> save(PlantaDB planta) async {
     var dbClient = await db;
-   coleta.id = await dbClient.insert(TABLE, coleta.toMap());
+   planta.id = await dbClient.insert(TABLE, planta.toMap());
 
     // await dbClient.transaction((txn) async {
     //   var query = "INSERT INTO $TABLE ($PROJETO, $COLETOR, $ESTADO) VALUES ('${coleta.projeto}', '${coleta.coletor}', '${coleta.projeto}' )";
     //   return await txn.rawInsert(query);
     // });
-
-    return coleta;
-
+    return planta;
   }
 
-  Future<List<ColetaDB>> getColeta() async {
+  Future<List<PlantaDB>> getPlanta() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(TABLE, columns: [ID, PROJETO, COLETOR, ESTADO, MUNICIPIO, DATA]);
-    // List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
-    List<ColetaDB> coletas = [];
+
+
+
+  //  String idColeta;
+    //List<Map> maps = await dbClient.query(TABLE, columns: [ID, NUMERO_COLETA, FAMILIA, GENERO, EPITETO, ALTURA, FLOR, FRUTO, SUBSTRATO, AMBIENTE, RELEVO, COORDENADA, OBSERVACAO]);
+     List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE WHERE ID_COLETA = $id_Coleta");
+    List<PlantaDB> plantas = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
-        coletas.add(ColetaDB.fromMap(maps[i]));
+        plantas.add(PlantaDB.fromMap(maps[i]));
       }
     }
-    return coletas;
+    return plantas;
   }
 
   Future<int> delete(int id) async {
@@ -67,14 +88,14 @@ class DBHelperPlanta {
     return await dbClient.delete(TABLE, where: '$ID = ?', whereArgs: [id]);
   }
 
-  Future<int> update(ColetaDB coleta) async {
+  Future<int> update(PlantaDB planta) async {
     var dbClient = await db;
-    return await dbClient.update(TABLE, coleta.toMap(),
-        where: '$ID = ?', whereArgs: [coleta.id]);
+    return await dbClient.update(TABLE, planta.toMap(),
+        where: '$ID = ?', whereArgs: [planta.id]);
   }
 
   Future close() async {
-    var dbColeta = await db;
-    dbColeta.close();
+    var dbPlanta = await db;
+    dbPlanta.close();
   }
 }

@@ -1,36 +1,22 @@
-import 'dart:core';
-
 import 'package:flutter/material.dart';
 import 'package:herbaria_coleta/form_page/planta_page.dart';
-import 'package:herbaria_coleta/list_page/lista_atributos.dart';
-import 'package:herbaria_coleta/sqlite/db_helperPlanta.dart';
 import '../sqlite/coleta_db.dart';
 import 'dart:async';
 import '../form_page/coleta_page.dart';
 import '../sqlite/db_helperColeta.dart';
 import '../sqlite/planta_db.dart';
 
-int cur_coletaId;
-String cur_coletaProjeto;
-String cur_coletaData;
-
-class ListaPlantas extends StatefulWidget {
-
-  ListaPlantas(int coleta, String projeto, String data, )
-  {
-    cur_coletaId = coleta;
-    cur_coletaProjeto = projeto;
-    cur_coletaData = data;
-  }
-
+class ListaAtributos extends StatefulWidget {
+  final String title;
+  ListaAtributos({Key key, this.title}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _ListaPlantasState();
+    return _ListaAtributosState();
   }
 }
-class _ListaPlantasState extends State<ListaPlantas> {
-  Future<List<PlantaDB>> plantas;
+class _ListaAtributosState extends State<ListaAtributos> {
+  Future<List<ColetaDB>> plantas;
   TextEditingController controllerNumeroColeta = TextEditingController();
   TextEditingController controllerFamilia = TextEditingController();
   TextEditingController controllerGenero = TextEditingController();
@@ -57,16 +43,15 @@ class _ListaPlantasState extends State<ListaPlantas> {
   int relevo;
   String coordenada;
   String observacao;
-  int curColetaId;
 
   final formKey = new GlobalKey<FormState>();
   var dbHelper;
-
+  // bool isUpdating;
 
   @override
   void initState() {
     super.initState();
-    dbHelper = DBHelperPlanta(cur_coletaId);
+    dbHelper = DBHelperColeta();
     // isUpdating = false;
     refreshList();
   }
@@ -77,13 +62,12 @@ class _ListaPlantasState extends State<ListaPlantas> {
     });
   }
 
-
   SingleChildScrollView dataTable(List<PlantaDB> plantas) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: DataTable(
-          columnSpacing: 14.0,
-          headingTextStyle: const TextStyle(
+        columnSpacing: 14.0,
+        headingTextStyle: const TextStyle(
             fontSize: 15.0,
             color: Colors.black87,
             fontWeight: FontWeight.w600),
@@ -111,16 +95,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
         rows: plantas
             .map(
               (planta) => DataRow(cells: [
-                DataCell(
-                  Text('${planta.idColeta}'),
-                  onTap: () {
-                    setState(() {
-                      // isUpdating = true;
-                      curPlantaId = planta.id;
-                    });
-                  },
-                ),
-                DataCell(
+            DataCell(
               Text('${planta.numeroColeta}'),
               onTap: () {
                 setState(() {
@@ -130,58 +105,57 @@ class _ListaPlantasState extends State<ListaPlantas> {
                 controllerNumeroColeta.text = planta.numeroColeta as String;
               },
             ),
-                DataCell(
-                  Text(planta.genero),
-                  onTap: () {
-                    setState(() {
-                      // isUpdating = true;
-                      curPlantaId = planta.id;
-                    });
-                    controllerGenero.text = planta.genero;
-                  },
-                ),
-                DataCell(
-                  Text(planta.epiteto),
-                  onTap: () {
-                    setState(() {
-                      // isUpdating = true;
-                      curPlantaId = planta.id;
-                    });
-                    controllerEpiteto.text = planta.epiteto;
-                  },
-                ),
-                DataCell(
-                  Text(planta.familia),
-                  onTap: () {
-                    setState(() {
-                      // isUpdating = true;
-                      curPlantaId = planta.id;
-                    });
-                    controllerFamilia.text = planta.familia;
-                  },
-                ),
-                DataCell(
-                  Text(planta.observacao),
-                  onTap: () {
-                    setState(() {
-  //                    isUpdating = true;
-                      curPlantaId = planta.id;
-                    });
-                    controllerObservacao.text = planta.observacao;
-                  },
-                ),
-                DataCell(IconButton(
+            DataCell(
+              Text(planta.genero),
+              onTap: () {
+                setState(() {
+                  // isUpdating = true;
+                  curPlantaId = planta.id;
+                });
+                controllerGenero.text = planta.genero;
+              },
+            ),
+            DataCell(
+              Text(planta.epiteto),
+              onTap: () {
+                setState(() {
+                  // isUpdating = true;
+                  curPlantaId = planta.id;
+                });
+                controllerEpiteto.text = planta.epiteto;
+              },
+            ),
+            DataCell(
+              Text(planta.familia),
+              onTap: () {
+                setState(() {
+                  // isUpdating = true;
+                  curPlantaId = planta.id;
+                });
+                controllerFamilia.text = planta.familia;
+              },
+            ),
+            DataCell(
+              Text(planta.observacao),
+              onTap: () {
+                setState(() {
+                  //                    isUpdating = true;
+                  curPlantaId = planta.id;
+                });
+                controllerObservacao.text = planta.observacao;
+              },
+            ),
+            DataCell(IconButton(
               icon: Icon(Icons.arrow_right),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                ListaAtributos()));
-                  },
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            PlantaPage(curPlantaId)));
+              },
             )),
           ]),
-
         )
             .toList(),
       ),
@@ -209,12 +183,10 @@ class _ListaPlantasState extends State<ListaPlantas> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-
         elevation: 0,
-        title: Text('Coleta ' + cur_coletaProjeto + ' - ' + cur_coletaData ),
+        title: Text('Coletas Registradas'),
         centerTitle: true,
       ),
       body:  Container(
@@ -229,25 +201,33 @@ class _ListaPlantasState extends State<ListaPlantas> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                PlantaPage(cur_coletaId)));
+                 //   Navigator.push(
+                  //      context,
+                     //   MaterialPageRoute(
+                            //builder: (BuildContext context) =>
+                               // ColetaPage(2)));
                   },
                   child: Text(
                     //  isUpdating ? 'Nova Coleta' :
-                      'Editar Lista de Plantas'),
+                      'Editar Lista de Coletas'),
                 ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              refreshList();
-            });
-          },
-          child: Text('Atualizar'),
-        )
-    ],
+                //         ElevatedButton(
+                // onPressed: () {
+                //       setState(() {
+                //               // isUpdating = false;
+                //             });
+                //           },
+                //           child: Text('Excluir Coleta'),
+                //         ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      refreshList();
+                    });
+                  },
+                  child: Text('Atualizar'),
+                )
+              ],
             ),
           ],
         ),

@@ -4,6 +4,8 @@ import '../sqlite/coleta_db.dart';
 import 'dart:async';
 import '../form_page/coleta_page.dart';
 import '../sqlite/db_helperColeta.dart';
+import '../sqlite/planta_db.dart';
+import 'lista_plantas.dart';
 
 class ListaColetas extends StatefulWidget {
   final String title;
@@ -51,7 +53,7 @@ class _ListaColetasState extends State<ListaColetas> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: DataTable(
-          columnSpacing: 14.0,
+          columnSpacing: 5.0,
           headingTextStyle: const TextStyle(
             fontSize: 15.0,
             color: Colors.black87,
@@ -121,7 +123,7 @@ class _ListaColetasState extends State<ListaColetas> {
                   },
                 ),
                 DataCell(
-                  Text(coleta.data),
+                  Text('${coleta.data}'),
                   onTap: () {
                     setState(() {
   //                    isUpdating = true;
@@ -137,7 +139,9 @@ class _ListaColetasState extends State<ListaColetas> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                PlantaPage()));
+                                ListaPlantas(coleta.id, coleta.projeto, coleta.data)),
+                    );
+
                   },
             )),
           ]),
@@ -190,20 +194,11 @@ class _ListaColetasState extends State<ListaColetas> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                ColetaPage()));
+                                ColetaPage('deu certo')));
                   },
                   child: Text(
-                    //  isUpdating ? 'Nova Coleta' :
                       'Editar Lista de Coletas'),
                 ),
-        //         ElevatedButton(
-        // onPressed: () {
-        //       setState(() {
-        //               // isUpdating = false;
-        //             });
-        //           },
-        //           child: Text('Excluir Coleta'),
-        //         ),
         ElevatedButton(
           onPressed: () {
             setState(() {
