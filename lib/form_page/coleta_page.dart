@@ -7,7 +7,7 @@ import '../sqlite/db_helperColeta.dart';
 class ColetaPage extends StatefulWidget {
 
 
-   ColetaPage(String testando);
+  ColetaPage(String testando);
 
 
   @override
@@ -59,7 +59,7 @@ class _ColetaPageState extends State<ColetaPage> {
   }
 
   validate() {
-    
+
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       if (isUpdating) {
@@ -75,6 +75,14 @@ class _ColetaPageState extends State<ColetaPage> {
       clearAll();
       refreshList();
     }
+  }
+
+  updateFields(coleta){
+    controllerProjeto.text = coleta.projeto;
+    controllerColetor.text = coleta.coletor;
+    controllerEstado.text = coleta.estado;
+    controllerMunicipio.text = coleta.municipio;
+    controllerData.text = coleta.data;
   }
 
   form() {
@@ -190,48 +198,48 @@ class _ColetaPageState extends State<ColetaPage> {
           alignment: AlignmentDirectional.centerStart,
           width: 600,
 
-      child: DataTable(
+          child: DataTable(
 
-          columnSpacing: 6.0,
-          headingTextStyle: const TextStyle(
-            fontSize: 15.0,
-            color: Colors.black87,
-            fontWeight: FontWeight.w600),
-        columns:
+            columnSpacing: 6.0,
+            headingTextStyle: const TextStyle(
+                fontSize: 15.0,
+                color: Colors.black87,
+                fontWeight: FontWeight.w600),
+            columns:
 
-        [
-          DataColumn(
-            label: Text('PROJETO', ),
-          ),
-          DataColumn(
-            label: Text('COLETOR'),
-          ),
-          DataColumn(
-            label: Text('UF'),
-          ),
-          DataColumn(
-            label: Text('CIDADE'),
-          ),
-          DataColumn(
-            label: Text('DATA'),
-          ),
-          DataColumn(
-            label: Text(''),
-          )
-        ],
-        rows: coletas
-            .map(
-              (coleta) => DataRow(cells: [
-            DataCell(
-              Text('${coleta.projeto}'),
-              onTap: () {
-                setState(() {
-                  isUpdating = true;
-                  curColetaId = coleta.id;
-                });
-                controllerProjeto.text = coleta.projeto;
-              },
-            ),
+            [
+              DataColumn(
+                label: Text('PROJETO', ),
+              ),
+              DataColumn(
+                label: Text('COLETOR'),
+              ),
+              DataColumn(
+                label: Text('UF'),
+              ),
+              DataColumn(
+                label: Text('CIDADE'),
+              ),
+              DataColumn(
+                label: Text('DATA'),
+              ),
+              DataColumn(
+                label: Text(''),
+              )
+            ],
+            rows: coletas
+                .map(
+                  (coleta) => DataRow(cells: [
+                DataCell(
+                  Text('${coleta.projeto}'),
+                  onTap: () {
+                    setState(() {
+                      isUpdating = true;
+                      curColetaId = coleta.id;
+                    });
+                    updateFields(coleta);
+                  }
+                ),
                 DataCell(
                   Text('${coleta.coletor}'),
                   onTap: () {
@@ -239,7 +247,7 @@ class _ColetaPageState extends State<ColetaPage> {
                       isUpdating = true;
                       curColetaId = coleta.id;
                     });
-                    controllerColetor.text = coleta.coletor;
+                    updateFields(coleta);
                   },
                 ),
                 DataCell(
@@ -249,7 +257,7 @@ class _ColetaPageState extends State<ColetaPage> {
                       isUpdating = true;
                       curColetaId = coleta.id;
                     });
-                    controllerEstado.text = coleta.estado;
+                    updateFields(coleta);
                   },
                 ),
                 DataCell(
@@ -259,7 +267,7 @@ class _ColetaPageState extends State<ColetaPage> {
                       isUpdating = true;
                       curColetaId = coleta.id;
                     });
-                    controllerMunicipio.text = coleta.municipio;
+                    updateFields(coleta);
                   },
                 ),
                 DataCell(
@@ -269,21 +277,21 @@ class _ColetaPageState extends State<ColetaPage> {
                       isUpdating = true;
                       curColetaId = coleta.id;
                     });
-                    controllerData.text = coleta.data;
+                    updateFields(coleta);
                   },
                 ),
                 DataCell(IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                dbHelper.delete(coleta.id);
-                refreshList();
-              },
-            )),
-          ]),
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    dbHelper.delete(coleta.id);
+                    refreshList();
+                  },
+                )),
+              ]),
+            )
+                .toList(),
+          ),
         )
-            .toList(),
-      ),
-    )
     );
   }
 
@@ -328,7 +336,7 @@ class _ColetaPageState extends State<ColetaPage> {
             form(),
             list(),
 
-        ],
+          ],
         ),
       ),
     );
