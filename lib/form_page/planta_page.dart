@@ -68,18 +68,18 @@ class _PlantaPageState extends State<PlantaPage> {
   }
 
   clearAll() {
-    controllerNumeroColeta.text = '';
-    controllerFamilia.text = '';
-    controllerGenero.text = '';
-    controllerEpiteto.text = '';
-    controllerAltura.text = '';
-    controllerFlor.text = '';
-    controllerFruto.text = '';
-    controllerSubstrato.text = '';
-    controllerAmbiente.text = '';
-    controllerRelevo.text = '';
-    controllerCoordenada.text = '';
-    controllerObservacao.text = '';
+    controllerNumeroColeta.text = null;
+    controllerFamilia.text = null;
+    controllerGenero.text = null;
+    controllerEpiteto.text = null;
+    controllerAltura.text = null;
+    controllerFlor.text = null;
+    controllerFruto.text = null;
+    controllerSubstrato.text = null;
+    controllerAmbiente.text = null;
+    controllerRelevo.text = null;
+    controllerCoordenada.text = null;
+    controllerObservacao.text = null;
   }
 
   validate() {
@@ -124,7 +124,7 @@ class _PlantaPageState extends State<PlantaPage> {
               controller: controllerNumeroColeta,
               keyboardType: TextInputType.text,
   //            validator: (val) => val.length == 0 ? 'Número de coleta obrigatório!' : null,
-              onSaved: (val) => numeroColeta = val as int,
+              onSaved: (val) => numeroColeta = int.fromEnvironment(val),
             ),
             const Espaco(),
             TextFormField(
@@ -179,7 +179,7 @@ class _PlantaPageState extends State<PlantaPage> {
               controller: controllerAltura,
               keyboardType: TextInputType.text,
 //              validator: (val) => val.length == 0 ? 'Enter Name' : null,
-              onSaved: (val) => altura = val as double,
+              onSaved: (val) => altura = val == "" ? 0.0 : double.parse(val),
             ),
             const Espaco(),
             TextFormField(
@@ -244,7 +244,7 @@ class _PlantaPageState extends State<PlantaPage> {
                   border: OutlineInputBorder()),
               controller: controllerRelevo,
               keyboardType: TextInputType.text,
-              onSaved: (val) => relevo = val as int,
+              onSaved: (val) => relevo = val == "" ? 0 : int.parse(val),
             ),
             const Espaco(),
             TextFormField(

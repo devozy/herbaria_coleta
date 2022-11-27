@@ -7,7 +7,7 @@ import 'package:herbaria_coleta/sqlite/db_helperPlanta.dart';
 import '../sqlite/coleta_db.dart';
 import 'dart:async';
 import '../form_page/coleta_page.dart';
-import '../sqlite/db_helperColeta.dart';
+import '../configs/db_helperColeta.dart';
 import '../sqlite/planta_db.dart';
 
 int cur_coletaId;

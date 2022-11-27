@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../sqlite/coleta_db.dart';
 import 'dart:async';
-import '../sqlite/db_helperColeta.dart';
+import '../configs/db_helperColeta.dart';
 
 
 class ColetaPage extends StatefulWidget {
