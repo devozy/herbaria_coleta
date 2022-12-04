@@ -7,14 +7,14 @@ import 'package:path_provider/path_provider.dart';
 
 import '../form_page/planta_page.dart';
 
-
 class DBHelperPlanta {
   String id_Coleta;
-  DBHelperPlanta(int cur_coletaId0)
-  {
+
+  DBHelperPlanta(int cur_coletaId0) {
     id_Coleta = cur_coletaId as String;
   }
-String nomeTabela;
+
+  String nomeTabela;
 
   static Database _db;
   static const String ID = 'id';
@@ -34,7 +34,6 @@ String nomeTabela;
   static const String TABLE = 'coletaX';
   static const String DB_NAME = 'coleta1.db';
 
-
   Future<Database> get db async {
     if (_db != null) {
       return _db;
@@ -51,29 +50,20 @@ String nomeTabela;
   }
 
   _onCreate(Database db, int version) async {
-    await db
-        .execute("CREATE TABLE $nomeTabela ($ID INTEGER PRIMARY KEY, $NUMERO_COLETA TEXT, $FAMILIA TEXT, $GENERO TEXT, $EPITETO TEXT, $ALTURA TEXT, $FLOR TEXT, $FRUTO TEXT, $SUBSTRATO TEXT, $AMBIENTE TEXT, $RELEVO TEXT, $COORDENADA TEXT, $OBSERVACAO TEXT, $ID_COLETA TEXT  )");
+    await db.execute(
+        "CREATE TABLE $nomeTabela ($ID INTEGER PRIMARY KEY, $NUMERO_COLETA TEXT, $FAMILIA TEXT, $GENERO TEXT, $EPITETO TEXT, $ALTURA TEXT, $FLOR TEXT, $FRUTO TEXT, $SUBSTRATO TEXT, $AMBIENTE TEXT, $RELEVO TEXT, $COORDENADA TEXT, $OBSERVACAO TEXT, $ID_COLETA TEXT  )");
   }
 
   Future<PlantaDB> save(PlantaDB planta) async {
     var dbClient = await db;
-   planta.id = await dbClient.insert(TABLE, planta.toMap());
-
-    // await dbClient.transaction((txn) async {
-    //   var query = "INSERT INTO $TABLE ($PROJETO, $COLETOR, $ESTADO) VALUES ('${coleta.projeto}', '${coleta.coletor}', '${coleta.projeto}' )";
-    //   return await txn.rawInsert(query);
-    // });
+    planta.id = await dbClient.insert(TABLE, planta.toMap());
     return planta;
   }
 
   Future<List<PlantaDB>> getPlanta() async {
     var dbClient = await db;
-
-
-
-  //  String idColeta;
-    //List<Map> maps = await dbClient.query(TABLE, columns: [ID, NUMERO_COLETA, FAMILIA, GENERO, EPITETO, ALTURA, FLOR, FRUTO, SUBSTRATO, AMBIENTE, RELEVO, COORDENADA, OBSERVACAO]);
-     List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE WHERE ID_COLETA = $id_Coleta");
+    List<Map> maps = await dbClient
+        .rawQuery("SELECT * FROM $TABLE WHERE ID_COLETA = $id_Coleta");
     List<PlantaDB> plantas = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {

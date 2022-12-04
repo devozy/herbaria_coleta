@@ -40,18 +40,12 @@ class DBHelperColeta {
   Future<ColetaDB> save(ColetaDB coleta) async {
     var dbClient = await db;
    coleta.id = await dbClient.insert(TABLE, coleta.toMap());
-
-    // await dbClient.transaction((txn) async {
-    //   var query = "INSERT INTO $TABLE ($PROJETO, $COLETOR, $ESTADO) VALUES ('${coleta.projeto}', '${coleta.coletor}', '${coleta.projeto}' )";
-    //   return await txn.rawInsert(query);
-    // });
     return coleta;
   }
 
   Future<List<ColetaDB>> getColeta() async {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(TABLE, columns: [ID, PROJETO, COLETOR, ESTADO, MUNICIPIO, DATA]);
-    // List<Map> maps = await dbClient.rawQuery("SELECT * FROM $TABLE");
     List<ColetaDB> coletas = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; i++) {
