@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:herbaria_coleta/form_page/planta_page.dart';
-import '../sqlite/coleta_db.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:herbaria_coleta/db/coleta_database.dart';
+import 'package:herbaria_coleta/models/coleta.dart';
+
 import '../form_page/coleta_page.dart';
-import '../sqlite/db_helperColeta.dart';
-import '../sqlite/planta_db.dart';
 import 'lista_plantas.dart';
 
 class ListaColetas extends StatefulWidget {
   final String title;
+
   ListaColetas({Key key, this.title}) : super(key: key);
 
   @override
@@ -16,8 +17,9 @@ class ListaColetas extends StatefulWidget {
     return _ListaColetasState();
   }
 }
+
 class _ListaColetasState extends State<ListaColetas> {
-  Future<List<ColetaDB>> coletas;
+  Future<List<Coleta>> coletas;
   TextEditingController controllerProjeto = TextEditingController();
   TextEditingController controllerColetor = TextEditingController();
   TextEditingController controllerEstado = TextEditingController();
@@ -33,34 +35,33 @@ class _ListaColetasState extends State<ListaColetas> {
 
   final formKey = new GlobalKey<FormState>();
   var dbHelper;
-  // bool isUpdating;
+  ColetaDatabase db;
 
   @override
   void initState() {
     super.initState();
-    dbHelper = DBHelperColeta();
-    // isUpdating = false;
+    db = ColetaDatabase.instance;
     refreshList();
   }
 
   refreshList() {
     setState(() {
-      coletas = dbHelper.getColeta();
+      coletas = db.findAll();
     });
   }
 
-  SingleChildScrollView dataTable(List<ColetaDB> coletas) {
+  SingleChildScrollView dataTable(List<Coleta> coletas) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: DataTable(
-          columnSpacing: 5.0,
-          headingTextStyle: const TextStyle(
-            fontSize: 15.0,
-            color: Colors.black87,
-            fontWeight: FontWeight.w600),
+        columnSpacing: 5.0,
+        headingTextStyle: const TextStyle(
+            fontSize: 15.0, color: Colors.black87, fontWeight: FontWeight.w600),
         columns: const [
           DataColumn(
-            label: Text('PROJETO', ),
+            label: Text(
+              'PROJETO',
+            ),
           ),
           DataColumn(
             label: Text('COLETOR'),
@@ -75,23 +76,22 @@ class _ListaColetasState extends State<ListaColetas> {
             label: Text('DATA'),
           ),
           DataColumn(
-
             label: Text(''),
           )
         ],
         rows: coletas
             .map(
               (coleta) => DataRow(cells: [
-            DataCell(
-              Text('${coleta.projeto}'),
-              onTap: () {
-                setState(() {
-                  // isUpdating = true;
-                  curColetaId = coleta.id;
-                });
-                controllerProjeto.text = coleta.projeto;
-              },
-            ),
+                DataCell(
+                  Text('${coleta.projeto}'),
+                  onTap: () {
+                    setState(() {
+                      // isUpdating = true;
+                      curColetaId = coleta.id;
+                    });
+                    controllerProjeto.text = coleta.projeto;
+                  },
+                ),
                 DataCell(
                   Text(coleta.coletor),
                   onTap: () {
@@ -126,26 +126,25 @@ class _ListaColetasState extends State<ListaColetas> {
                   Text('${coleta.data}'),
                   onTap: () {
                     setState(() {
-  //                    isUpdating = true;
+                      //                    isUpdating = true;
                       curColetaId = coleta.id;
                     });
                     controllerData.text = coleta.data;
                   },
                 ),
                 DataCell(IconButton(
-              icon: Icon(Icons.arrow_right),
+                  icon: Icon(Icons.arrow_right),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                ListaPlantas(coleta.id, coleta.projeto, coleta.data)),
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => ListaPlantas(
+                              coleta.id, coleta.projeto, coleta.data)),
                     );
-
                   },
-            )),
-          ]),
-        )
+                )),
+              ]),
+            )
             .toList(),
       ),
     );
@@ -171,15 +170,15 @@ class _ListaColetasState extends State<ListaColetas> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 0,
         title: Text('Coletas Registradas'),
         centerTitle: true,
       ),
-      body:  Container(
-        child:  Column(
+      body: Container(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           verticalDirection: VerticalDirection.down,
@@ -196,18 +195,17 @@ class _ListaColetasState extends State<ListaColetas> {
                             builder: (BuildContext context) =>
                                 ColetaPage('deu certo')));
                   },
-                  child: Text(
-                      'Editar Lista de Coletas'),
+                  child: Text('Editar Lista de Coletas'),
                 ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              refreshList();
-            });
-          },
-          child: Text('Atualizar'),
-        )
-    ],
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      refreshList();
+                    });
+                  },
+                  child: Text('Atualizar'),
+                )
+              ],
             ),
           ],
         ),
@@ -215,7 +213,6 @@ class _ListaColetasState extends State<ListaColetas> {
     );
   }
 }
-
 
 class Espaco extends StatelessWidget {
   const Espaco({Key key}) : super(key: key);

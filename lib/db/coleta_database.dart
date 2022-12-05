@@ -3,11 +3,11 @@ import 'package:herbaria_coleta/models/helpers/helpers.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class HerbariaDatabase {
-  static final HerbariaDatabase instance = HerbariaDatabase._init();
+class ColetaDatabase {
+  static final ColetaDatabase instance = ColetaDatabase._init();
   static Database _database;
 
-  HerbariaDatabase._init();
+  ColetaDatabase._init();
 
   Future<Database> get database async {
     if (_database != null) {

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:herbaria_coleta/db/planta_database.dart';
 import 'dart:async';
-import '../sqlite/db_helperPlanta.dart';
-import '../sqlite/planta_db.dart';
+
+import 'package:herbaria_coleta/models/planta.dart';
 
 int cur_coletaId;
 
 class PlantaPage extends StatefulWidget {
-
-  PlantaPage(int coleta)
-  {
-   cur_coletaId = coleta;
+  PlantaPage(int coleta) {
+    cur_coletaId = coleta;
   }
 
   @override
@@ -19,7 +18,7 @@ class PlantaPage extends StatefulWidget {
 }
 
 class _PlantaPageState extends State<PlantaPage> {
-  Future<List<PlantaDB>> plantas;
+  Future<List<Planta>> plantas;
   TextEditingController controllerNumeroColeta = TextEditingController();
   TextEditingController controllerFamilia = TextEditingController();
   TextEditingController controllerGenero = TextEditingController();
@@ -49,21 +48,20 @@ class _PlantaPageState extends State<PlantaPage> {
   int idColeta;
 
   final formKey = new GlobalKey<FormState>();
-  var dbHelper;
+  PlantaDatabase db;
   bool isUpdating;
-
 
   @override
   void initState() {
     super.initState();
-    dbHelper = DBHelperPlanta(cur_coletaId);
+    db = PlantaDatabase.instance;
     isUpdating = false;
     refreshList();
   }
 
   refreshList() {
     setState(() {
-      plantas = dbHelper.getPlanta();
+      plantas = db.findAll();
     });
   }
 
@@ -86,25 +84,52 @@ class _PlantaPageState extends State<PlantaPage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       if (isUpdating) {
-        PlantaDB e = PlantaDB(curPlantaId, numeroColeta, familia, genero, epiteto, altura, flor, fruto, substrato, ambiente, relevo, coordenada, observacao, cur_coletaId );
-        dbHelper.update(e);
+        Planta planta = Planta(
+            id: curPlantaId,
+            numeroColeta: numeroColeta,
+            familia: familia,
+            genero: genero,
+            epiteto: epiteto,
+            altura: altura,
+            flor: flor,
+            fruto: fruto,
+            substrato: substrato,
+            ambiente: ambiente,
+            relevo: relevo,
+            coordenada: coordenada,
+            observacao: observacao,
+            coletaId: cur_coletaId);
+        db.update(planta);
         setState(() {
           isUpdating = false;
         });
       } else {
-        PlantaDB e = PlantaDB(curPlantaId, numeroColeta, familia, genero, epiteto, altura, flor, fruto, substrato, ambiente, relevo, coordenada, observacao, cur_coletaId);
-        dbHelper.save(e);
+        Planta planta = Planta(
+            id: null,
+            numeroColeta: numeroColeta,
+            familia: familia,
+            genero: genero,
+            epiteto: epiteto,
+            altura: altura,
+            flor: flor,
+            fruto: fruto,
+            substrato: substrato,
+            ambiente: ambiente,
+            relevo: relevo,
+            coordenada: coordenada,
+            observacao: observacao,
+            coletaId: cur_coletaId);
+        db.save(planta);
       }
       clearAll();
-   //   refreshList();
+      //   refreshList();
     }
   }
+
   form() {
-    return
-    Flexible(
-        child:
-        SingleChildScrollView(
-        child: Form(
+    return Flexible(
+        child: SingleChildScrollView(
+            child: Form(
       key: formKey,
       child: Padding(
         padding: EdgeInsets.all(15.0),
@@ -117,13 +142,13 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Nº de Coleta',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerNumeroColeta,
               keyboardType: TextInputType.text,
-  //            validator: (val) => val.length == 0 ? 'Número de coleta obrigatório!' : null,
+              //            validator: (val) => val.length == 0 ? 'Número de coleta obrigatório!' : null,
               onSaved: (val) => numeroColeta = val as int,
             ),
             const Espaco(),
@@ -131,8 +156,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Familia',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerFamilia,
@@ -144,8 +169,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Genero',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerGenero,
@@ -158,8 +183,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Epíteto',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerEpiteto,
@@ -172,8 +197,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Altura',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerAltura,
@@ -186,8 +211,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Flor',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerFlor,
@@ -199,8 +224,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Fruto',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerFruto,
@@ -212,8 +237,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Substrato',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerSubstrato,
@@ -225,8 +250,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Ambiente',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerAmbiente,
@@ -238,8 +263,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Relevo',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerRelevo,
@@ -251,8 +276,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Coordenada',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerCoordenada,
@@ -264,8 +289,8 @@ class _PlantaPageState extends State<PlantaPage> {
               decoration: const InputDecoration(
                   labelText: 'Observação',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerObservacao,
@@ -277,9 +302,8 @@ class _PlantaPageState extends State<PlantaPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed:validate,
+                  onPressed: validate,
                   child: Text('ADICIONAR'),
-
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -293,15 +317,11 @@ class _PlantaPageState extends State<PlantaPage> {
                 )
               ],
             ),
-
           ],
         ),
       ),
-    )
-      )
-    );
-}
-
+    )));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +335,6 @@ class _PlantaPageState extends State<PlantaPage> {
         title: Text("Novo Espécime"),
         centerTitle: true,
       ),
-
       body: new Container(
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -323,8 +342,7 @@ class _PlantaPageState extends State<PlantaPage> {
           verticalDirection: VerticalDirection.down,
           children: <Widget>[
             form(),
-
-        ],
+          ],
         ),
       ),
     );

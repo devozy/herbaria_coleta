@@ -1,4 +1,6 @@
-class Helpers{
-  static final String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-  static final String textType = 'TEXT';
+class Helpers {
+  static const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+  static const String textType = 'TEXT';
+
+  static const String intType = 'INTEGER';
 }

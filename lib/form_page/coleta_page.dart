@@ -1,14 +1,11 @@
-import 'package:flutter/material.dart';
-import '../sqlite/coleta_db.dart';
 import 'dart:async';
-import '../sqlite/db_helperColeta.dart';
 
+import 'package:flutter/material.dart';
+import 'package:herbaria_coleta/db/coleta_database.dart';
+import 'package:herbaria_coleta/models/coleta.dart';
 
 class ColetaPage extends StatefulWidget {
-
-
   ColetaPage(String testando);
-
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +14,7 @@ class ColetaPage extends StatefulWidget {
 }
 
 class _ColetaPageState extends State<ColetaPage> {
-  Future<List<ColetaDB>> coletas;
+  Future<List<Coleta>> coletas;
   TextEditingController controllerProjeto = TextEditingController();
   TextEditingController controllerColetor = TextEditingController();
   TextEditingController controllerEstado = TextEditingController();
@@ -31,22 +28,22 @@ class _ColetaPageState extends State<ColetaPage> {
   String municipio;
   String data;
 
-
   final formKey = new GlobalKey<FormState>();
   var dbHelper;
   bool isUpdating;
+  ColetaDatabase db;
 
   @override
   void initState() {
     super.initState();
-    dbHelper = DBHelperColeta();
+    db = ColetaDatabase.instance;
     isUpdating = false;
     refreshList();
   }
 
   refreshList() {
     setState(() {
-      coletas = dbHelper.getColeta();
+      coletas = db.findAll();
     });
   }
 
@@ -59,25 +56,36 @@ class _ColetaPageState extends State<ColetaPage> {
   }
 
   validate() {
-
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       if (isUpdating) {
-        ColetaDB e = ColetaDB(curColetaId, projeto, coletor, estado, municipio, data);
-        dbHelper.update(e);
+        Coleta coleta = Coleta(
+            id: curColetaId,
+            projeto: projeto,
+            coletor: coletor,
+            estado: estado,
+            municipio: municipio,
+            data: DateTime.now().toIso8601String());
+        db.update(coleta);
         setState(() {
           isUpdating = false;
         });
       } else {
-        ColetaDB e = ColetaDB(curColetaId,projeto, coletor, estado, municipio, data);
-        dbHelper.save(e);
+        Coleta coleta = Coleta(
+            projeto: projeto,
+            coletor: coletor,
+            estado: estado,
+            municipio: municipio,
+            data: DateTime.now().toIso8601String());
+
+        db.save(coleta);
       }
       clearAll();
       refreshList();
     }
   }
 
-  updateFields(coleta){
+  updateFields(coleta) {
     controllerProjeto.text = coleta.projeto;
     controllerColetor.text = coleta.coletor;
     controllerEstado.text = coleta.estado;
@@ -99,8 +107,8 @@ class _ColetaPageState extends State<ColetaPage> {
               decoration: const InputDecoration(
                   labelText: 'Projeto',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerProjeto,
@@ -113,8 +121,8 @@ class _ColetaPageState extends State<ColetaPage> {
               decoration: const InputDecoration(
                   labelText: 'Coletor',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerColetor,
@@ -127,8 +135,8 @@ class _ColetaPageState extends State<ColetaPage> {
               decoration: const InputDecoration(
                   labelText: 'Estado',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerEstado,
@@ -141,8 +149,8 @@ class _ColetaPageState extends State<ColetaPage> {
               decoration: const InputDecoration(
                   labelText: 'Município',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerMunicipio,
@@ -155,8 +163,8 @@ class _ColetaPageState extends State<ColetaPage> {
               decoration: const InputDecoration(
                   labelText: 'Data',
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
+                    borderSide: BorderSide(
+                        color: Color.fromARGB(255, 59, 93, 77), width: 3.0),
                   ),
                   border: OutlineInputBorder()),
               controller: controllerData,
@@ -169,9 +177,8 @@ class _ColetaPageState extends State<ColetaPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed:validate,
+                  onPressed: validate,
                   child: Text(isUpdating ? 'ATUALIZAR' : 'ADICIONAR'),
-
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -191,25 +198,23 @@ class _ColetaPageState extends State<ColetaPage> {
     );
   }
 
-  SingleChildScrollView dataTable(List<ColetaDB> coletas) {
+  SingleChildScrollView dataTable(List<Coleta> coletas) {
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
           alignment: AlignmentDirectional.centerStart,
           width: 600,
-
           child: DataTable(
-
             columnSpacing: 6.0,
             headingTextStyle: const TextStyle(
                 fontSize: 15.0,
                 color: Colors.black87,
                 fontWeight: FontWeight.w600),
-            columns:
-
-            [
+            columns: [
               DataColumn(
-                label: Text('PROJETO', ),
+                label: Text(
+                  'PROJETO',
+                ),
               ),
               DataColumn(
                 label: Text('COLETOR'),
@@ -229,70 +234,67 @@ class _ColetaPageState extends State<ColetaPage> {
             ],
             rows: coletas
                 .map(
-                  (coleta) => DataRow(cells: [
-                DataCell(
-                  Text('${coleta.projeto}'),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    updateFields(coleta);
-                  }
-                ),
-                DataCell(
-                  Text('${coleta.coletor}'),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    updateFields(coleta);
-                  },
-                ),
-                DataCell(
-                  Text(coleta.estado),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    updateFields(coleta);
-                  },
-                ),
-                DataCell(
-                  Text(coleta.municipio),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    updateFields(coleta);
-                  },
-                ),
-                DataCell(
-                  Text('${coleta.data}'),
-                  onTap: () {
-                    setState(() {
-                      isUpdating = true;
-                      curColetaId = coleta.id;
-                    });
-                    updateFields(coleta);
-                  },
-                ),
-                DataCell(IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    dbHelper.delete(coleta.id);
-                    refreshList();
-                  },
-                )),
-              ]),
+                  (coleta) =>
+                  DataRow(cells: [
+                    DataCell(Text('${coleta.projeto}'), onTap: () {
+                      setState(() {
+                        isUpdating = true;
+                        curColetaId = coleta.id;
+                      });
+                      updateFields(coleta);
+                    }),
+                    DataCell(
+                      Text('${coleta.coletor}'),
+                      onTap: () {
+                        setState(() {
+                          isUpdating = true;
+                          curColetaId = coleta.id;
+                        });
+                        updateFields(coleta);
+                      },
+                    ),
+                    DataCell(
+                      Text(coleta.estado),
+                      onTap: () {
+                        setState(() {
+                          isUpdating = true;
+                          curColetaId = coleta.id;
+                        });
+                        updateFields(coleta);
+                      },
+                    ),
+                    DataCell(
+                      Text(coleta.municipio),
+                      onTap: () {
+                        setState(() {
+                          isUpdating = true;
+                          curColetaId = coleta.id;
+                        });
+                        updateFields(coleta);
+                      },
+                    ),
+                    DataCell(
+                      Text('${coleta.data.substring(0, 9).replaceAll('-', '/').trim()}'),
+                      onTap: () {
+                        setState(() {
+                          isUpdating = true;
+                          curColetaId = coleta.id;
+                        });
+                        updateFields(coleta);
+                      },
+                    ),
+                    DataCell(IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        dbHelper.delete(coleta.id);
+                        refreshList();
+                      },
+                    )),
+                  ]),
             )
                 .toList(),
           ),
-        )
-    );
+        ));
   }
 
   list() {
@@ -326,7 +328,6 @@ class _ColetaPageState extends State<ColetaPage> {
         title: Text("Lista de Coletas"),
         centerTitle: true,
       ),
-
       body: new Container(
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -335,7 +336,6 @@ class _ColetaPageState extends State<ColetaPage> {
           children: <Widget>[
             form(),
             list(),
-
           ],
         ),
       ),

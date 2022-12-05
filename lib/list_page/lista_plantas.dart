@@ -1,36 +1,34 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:herbaria_coleta/db/planta_database.dart';
 import 'package:herbaria_coleta/form_page/planta_page.dart';
 import 'package:herbaria_coleta/list_page/lista_atributos.dart';
-import 'package:herbaria_coleta/sqlite/db_helperPlanta.dart';
-import '../sqlite/coleta_db.dart';
-import 'dart:async';
-import '../form_page/coleta_page.dart';
-import '../sqlite/db_helperColeta.dart';
-import '../sqlite/planta_db.dart';
+import 'package:herbaria_coleta/models/planta.dart';
 
 int cur_coletaId;
 String cur_coletaProjeto;
 String cur_coletaData;
 
 class ListaPlantas extends StatefulWidget {
-
-  ListaPlantas(int coleta, String projeto, String data, )
-  {
+  ListaPlantas(
+    int coleta,
+    String projeto,
+    String data,
+  ) {
     cur_coletaId = coleta;
     cur_coletaProjeto = projeto;
     cur_coletaData = data;
   }
-
 
   @override
   State<StatefulWidget> createState() {
     return _ListaPlantasState();
   }
 }
+
 class _ListaPlantasState extends State<ListaPlantas> {
-  Future<List<PlantaDB>> plantas;
+  Future<List<Planta>> plantas;
   TextEditingController controllerNumeroColeta = TextEditingController();
   TextEditingController controllerFamilia = TextEditingController();
   TextEditingController controllerGenero = TextEditingController();
@@ -60,36 +58,33 @@ class _ListaPlantasState extends State<ListaPlantas> {
   int curColetaId;
 
   final formKey = new GlobalKey<FormState>();
-  var dbHelper;
-
+  PlantaDatabase dbHelper;
 
   @override
   void initState() {
     super.initState();
-    dbHelper = DBHelperPlanta(cur_coletaId);
-    // isUpdating = false;
+    dbHelper = PlantaDatabase.instance;
     refreshList();
   }
 
   refreshList() {
     setState(() {
-      plantas = dbHelper.getPlanta();
+      plantas = dbHelper.findAll();
     });
   }
 
-
-  SingleChildScrollView dataTable(List<PlantaDB> plantas) {
+  SingleChildScrollView dataTable(List<Planta> plantas) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: DataTable(
-          columnSpacing: 14.0,
-          headingTextStyle: const TextStyle(
-            fontSize: 15.0,
-            color: Colors.black87,
-            fontWeight: FontWeight.w600),
+        columnSpacing: 14.0,
+        headingTextStyle: const TextStyle(
+            fontSize: 15.0, color: Colors.black87, fontWeight: FontWeight.w600),
         columns: const [
           DataColumn(
-            label: Text('Nº Coleta', ),
+            label: Text(
+              'Nº Coleta',
+            ),
           ),
           DataColumn(
             label: Text('Gênero'),
@@ -104,7 +99,6 @@ class _ListaPlantasState extends State<ListaPlantas> {
             label: Text('Obervação'),
           ),
           DataColumn(
-
             label: Text(''),
           )
         ],
@@ -112,7 +106,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
             .map(
               (planta) => DataRow(cells: [
                 DataCell(
-                  Text('${planta.idColeta}'),
+                  Text('${planta.coletaId}'),
                   onTap: () {
                     setState(() {
                       // isUpdating = true;
@@ -121,15 +115,15 @@ class _ListaPlantasState extends State<ListaPlantas> {
                   },
                 ),
                 DataCell(
-              Text('${planta.numeroColeta}'),
-              onTap: () {
-                setState(() {
-                  // isUpdating = true;
-                  curPlantaId = planta.id;
-                });
-                controllerNumeroColeta.text = planta.numeroColeta as String;
-              },
-            ),
+                  Text('${planta.numeroColeta}'),
+                  onTap: () {
+                    setState(() {
+                      // isUpdating = true;
+                      curPlantaId = planta.id;
+                    });
+                    controllerNumeroColeta.text = planta.numeroColeta as String;
+                  },
+                ),
                 DataCell(
                   Text(planta.genero),
                   onTap: () {
@@ -164,14 +158,14 @@ class _ListaPlantasState extends State<ListaPlantas> {
                   Text(planta.observacao),
                   onTap: () {
                     setState(() {
-  //                    isUpdating = true;
+                      //                    isUpdating = true;
                       curPlantaId = planta.id;
                     });
                     controllerObservacao.text = planta.observacao;
                   },
                 ),
                 DataCell(IconButton(
-              icon: Icon(Icons.arrow_right),
+                  icon: Icon(Icons.arrow_right),
                   onPressed: () {
                     Navigator.push(
                         context,
@@ -179,10 +173,9 @@ class _ListaPlantasState extends State<ListaPlantas> {
                             builder: (BuildContext context) =>
                                 ListaAtributos()));
                   },
-            )),
-          ]),
-
-        )
+                )),
+              ]),
+            )
             .toList(),
       ),
     );
@@ -208,17 +201,15 @@ class _ListaPlantasState extends State<ListaPlantas> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-
+    return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-
         elevation: 0,
-        title: Text('Coleta ' + cur_coletaProjeto + ' - ' + cur_coletaData ),
+        title: Text('Coleta ' + cur_coletaProjeto + ' - ' + cur_coletaData),
         centerTitle: true,
       ),
-      body:  Container(
-        child:  Column(
+      body: Container(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           verticalDirection: VerticalDirection.down,
@@ -236,18 +227,18 @@ class _ListaPlantasState extends State<ListaPlantas> {
                                 PlantaPage(cur_coletaId)));
                   },
                   child: Text(
-                    //  isUpdating ? 'Nova Coleta' :
+                      //  isUpdating ? 'Nova Coleta' :
                       'Editar Lista de Plantas'),
                 ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              refreshList();
-            });
-          },
-          child: Text('Atualizar'),
-        )
-    ],
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      refreshList();
+                    });
+                  },
+                  child: Text('Atualizar'),
+                )
+              ],
             ),
           ],
         ),
@@ -255,7 +246,6 @@ class _ListaPlantasState extends State<ListaPlantas> {
     );
   }
 }
-
 
 class Espaco extends StatelessWidget {
   const Espaco({Key key}) : super(key: key);
