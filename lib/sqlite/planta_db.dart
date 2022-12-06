@@ -1,15 +1,15 @@
 class PlantaDB {
   int id;
-  int numeroColeta;
+  String numeroColeta;
   String familia;
   String genero;
   String epiteto;
-  double altura;
+  String altura;
   String flor;
   String fruto;
   String substrato;
   String ambiente;
-  int relevo;
+  String relevo;
   String coordenada;
   String observacao;
   int idColeta;

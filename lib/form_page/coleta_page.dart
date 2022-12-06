@@ -4,10 +4,12 @@ import 'dart:async';
 import '../sqlite/db_helperColeta.dart';
 
 
+int cur_coletaId;
+
 class ColetaPage extends StatefulWidget {
 
 
-  ColetaPage(String testando);
+  ColetaPage(int cur_coletaId);
 
 
   @override

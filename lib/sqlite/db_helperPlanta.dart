@@ -10,8 +10,8 @@ import '../form_page/planta_page.dart';
 class DBHelperPlanta {
   String id_Coleta;
 
-  DBHelperPlanta(int cur_coletaId0) {
-    id_Coleta = cur_coletaId as String;
+  DBHelperPlanta(int cur_coletaId) {
+    id_Coleta = cur_coletaId.toString();
   }
 
   String nomeTabela;

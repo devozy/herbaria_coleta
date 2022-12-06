@@ -80,7 +80,7 @@ flutter:
 
 
   assets:
-    - imagens/login-image.jpg
+    - imagens/login-image.png
   #   - images/a_dot_ham.jpeg
   # To add assets to your application, add an assets section, like this:
   # assets:

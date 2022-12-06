@@ -194,7 +194,7 @@ class _ListaColetasState extends State<ListaColetas> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                ColetaPage('deu certo')));
+                                ColetaPage(curColetaId)));
                   },
                   child: Text(
                       'Editar Lista de Coletas'),
