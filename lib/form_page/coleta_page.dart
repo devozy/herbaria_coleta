@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:herbaria_coleta/db/coleta_database.dart';
 import 'package:herbaria_coleta/models/coleta.dart';
 
+int cur_coletaId;
+
 class ColetaPage extends StatefulWidget {
-  ColetaPage(String testando);
+  ColetaPage(int curColetaId){
+    cur_coletaId = curColetaId;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -286,7 +290,7 @@ class _ColetaPageState extends State<ColetaPage> {
                     DataCell(IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
-                        dbHelper.delete(coleta.id);
+                        db.deleteById(coleta.id);
                         refreshList();
                       },
                     )),

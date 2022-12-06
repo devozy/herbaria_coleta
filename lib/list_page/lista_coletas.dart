@@ -7,6 +7,7 @@ import 'package:herbaria_coleta/models/coleta.dart';
 import '../form_page/coleta_page.dart';
 import 'lista_plantas.dart';
 
+
 class ListaColetas extends StatefulWidget {
   final String title;
 
@@ -193,7 +194,7 @@ class _ListaColetasState extends State<ListaColetas> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                ColetaPage('deu certo')));
+                                ColetaPage(curColetaId)));
                   },
                   child: Text('Editar Lista de Coletas'),
                 ),
