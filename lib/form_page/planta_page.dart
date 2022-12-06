@@ -37,7 +37,7 @@ class _PlantaPageState extends State<PlantaPage> {
   String familia;
   String genero;
   String epiteto;
-  double altura;
+  String altura;
   String flor;
   String fruto;
   String substrato;
@@ -149,7 +149,7 @@ class _PlantaPageState extends State<PlantaPage> {
               controller: controllerNumeroColeta,
               keyboardType: TextInputType.text,
               //            validator: (val) => val.length == 0 ? 'Número de coleta obrigatório!' : null,
-              onSaved: (val) => numeroColeta = val as int,
+              onSaved: (val) => numeroColeta = int.parse(val),
             ),
             const Espaco(),
             TextFormField(
@@ -204,7 +204,7 @@ class _PlantaPageState extends State<PlantaPage> {
               controller: controllerAltura,
               keyboardType: TextInputType.text,
 //              validator: (val) => val.length == 0 ? 'Enter Name' : null,
-              onSaved: (val) => altura = val as double,
+              onSaved: (val) => altura = val,
             ),
             const Espaco(),
             TextFormField(
@@ -269,7 +269,7 @@ class _PlantaPageState extends State<PlantaPage> {
                   border: OutlineInputBorder()),
               controller: controllerRelevo,
               keyboardType: TextInputType.text,
-              onSaved: (val) => relevo = val as int,
+              onSaved: (val) => relevo = int.parse(val),
             ),
             const Espaco(),
             TextFormField(

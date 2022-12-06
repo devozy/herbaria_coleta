@@ -3,6 +3,8 @@ import 'package:herbaria_coleta/models/helpers/helpers.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../models/planta.dart';
+
 class ColetaDatabase {
   static final ColetaDatabase instance = ColetaDatabase._init();
   static Database _database;
@@ -33,6 +35,25 @@ class ColetaDatabase {
     ${ColetaFields.estado} ${Helpers.textType},
     ${ColetaFields.municipio} ${Helpers.textType},
     ${ColetaFields.data} ${Helpers.textType}
+    )
+    ''');
+
+    await db.execute('''
+    CREATE TABLE $tablePlanta (
+    ${PlantaFields.id} ${Helpers.idType},
+    ${PlantaFields.numeroColeta} ${Helpers.intType},
+    ${PlantaFields.familia} ${Helpers.textType},
+    ${PlantaFields.genero} ${Helpers.textType},
+    ${PlantaFields.epiteto} ${Helpers.textType},
+    ${PlantaFields.altura} ${Helpers.textType},
+    ${PlantaFields.flor} ${Helpers.textType},
+    ${PlantaFields.fruto} ${Helpers.textType},
+    ${PlantaFields.substrato} ${Helpers.textType},
+    ${PlantaFields.ambiente} ${Helpers.textType},
+    ${PlantaFields.relevo} ${Helpers.textType},
+    ${PlantaFields.coordenada} ${Helpers.textType},
+    ${PlantaFields.observacao} ${Helpers.textType},
+    ${PlantaFields.coletaId} ${Helpers.intType}
     )
     ''');
   }

@@ -40,7 +40,7 @@ class Planta {
   final String familia;
   final String genero;
   final String epiteto;
-  final double altura;
+  final String altura;
   final String flor;
   final String fruto;
   final String substrato;
@@ -123,7 +123,7 @@ class Planta {
         familia: map[PlantaFields.familia] as String,
         genero: map[PlantaFields.genero] as String,
         epiteto: map[PlantaFields.epiteto] as String,
-        altura: map[PlantaFields.altura] as double,
+        altura: map[PlantaFields.altura] as String,
         flor: map[PlantaFields.flor] as String,
         fruto: map[PlantaFields.fruto] as String,
         substrato: map[PlantaFields.substrato] as String,

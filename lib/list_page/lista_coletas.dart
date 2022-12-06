@@ -123,7 +123,7 @@ class _ListaColetasState extends State<ListaColetas> {
                   },
                 ),
                 DataCell(
-                  Text('${coleta.data}'),
+                  Text('${coleta.data.substring(0, 7).replaceAll('-', '/')}'),
                   onTap: () {
                     setState(() {
                       //                    isUpdating = true;

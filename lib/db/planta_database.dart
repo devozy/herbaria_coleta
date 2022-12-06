@@ -22,28 +22,7 @@ class PlantaDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, name);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
-  }
-
-  Future _createDB(Database db, int version) async {
-    await db.execute('''
-    CREATE TABLE $tablePlanta (
-    ${PlantaFields.id} ${Helpers.idType},
-    ${PlantaFields.numeroColeta} ${Helpers.intType},
-    ${PlantaFields.familia} ${Helpers.textType},
-    ${PlantaFields.genero} ${Helpers.textType},
-    ${PlantaFields.epiteto} ${Helpers.textType},
-    ${PlantaFields.altura} ${Helpers.textType},
-    ${PlantaFields.flor} ${Helpers.textType},
-    ${PlantaFields.fruto} ${Helpers.textType},
-    ${PlantaFields.substrato} ${Helpers.textType},
-    ${PlantaFields.ambiente} ${Helpers.textType},
-    ${PlantaFields.relevo} ${Helpers.textType},
-    ${PlantaFields.coordenada} ${Helpers.textType},
-    ${PlantaFields.observacao} ${Helpers.textType},
-    ${PlantaFields.coletaId} ${Helpers.intType}
-    )
-    ''');
+    return await openDatabase(path, version: 1);
   }
 
   Future<Planta> save(final Planta planta) async {
