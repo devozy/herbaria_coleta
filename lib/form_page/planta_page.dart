@@ -82,47 +82,47 @@ class _PlantaPageState extends State<PlantaPage> {
 
   validate() {
     if (formKey.currentState.validate()) {
-      formKey.currentState.save();
       if (isUpdating) {
         Planta planta = Planta(
             id: curPlantaId,
-            numeroColeta: numeroColeta,
-            familia: familia,
-            genero: genero,
-            epiteto: epiteto,
-            altura: altura,
-            flor: flor,
-            fruto: fruto,
-            substrato: substrato,
-            ambiente: ambiente,
-            relevo: relevo,
-            coordenada: coordenada,
-            observacao: observacao,
-            coletaId: cur_coletaId);
+            numeroColeta: int.parse(controllerNumeroColeta.text),
+            familia: controllerFamilia.text,
+            genero: controllerGenero.text,
+            epiteto: controllerEpiteto.text,
+            altura: controllerAltura.text,
+            flor: controllerFlor.text,
+            fruto: controllerFruto.text,
+            substrato: controllerSubstrato.text,
+            ambiente: controllerAmbiente.text,
+            relevo: int.parse(controllerRelevo.text),
+            coordenada: controllerCoordenada.text,
+            observacao: controllerObservacao.text,
+            coletaId: cur_coletaId
+        );
         db.update(planta);
         setState(() {
           isUpdating = false;
         });
-      } else {
+      }
+      else {
         Planta planta = Planta(
             id: null,
-            numeroColeta: numeroColeta,
-            familia: familia,
-            genero: genero,
-            epiteto: epiteto,
-            altura: altura,
-            flor: flor,
-            fruto: fruto,
-            substrato: substrato,
-            ambiente: ambiente,
-            relevo: relevo,
-            coordenada: coordenada,
-            observacao: observacao,
+            numeroColeta: int.parse(controllerNumeroColeta.text),
+            familia: controllerFamilia.text,
+            genero: controllerGenero.text,
+            epiteto: controllerEpiteto.text,
+            altura: controllerAltura.text,
+            flor: controllerFlor.text,
+            fruto: controllerFruto.text,
+            substrato: controllerSubstrato.text,
+            ambiente: controllerAmbiente.text,
+            relevo: int.parse(controllerRelevo.text),
+            coordenada: controllerCoordenada.text,
+            observacao: controllerObservacao.text,
             coletaId: cur_coletaId);
         db.save(planta);
       }
       clearAll();
-      //   refreshList();
     }
   }
 
@@ -322,7 +322,6 @@ class _PlantaPageState extends State<PlantaPage> {
       ),
     )));
   }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

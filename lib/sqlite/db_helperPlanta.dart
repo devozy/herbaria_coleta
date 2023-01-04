@@ -56,16 +56,16 @@ class DBHelperPlanta {
 
   Future<PlantaDB> save(PlantaDB planta) async {
     var dbClient = await db;
-    planta.id = await dbClient.insert(TABLE, planta.toMap());
+    planta.id = await dbClient.insert(nomeTabela, planta.toMap());
     return planta;
   }
 
   Future<List<PlantaDB>> getPlanta() async {
     var dbClient = await db;
     List<Map> maps = await dbClient
-        .rawQuery("SELECT * FROM $TABLE WHERE ID_COLETA = $id_Coleta");
+        .rawQuery("SELECT * FROM $nomeTabela WHERE ID_COLETA = $id_Coleta");
     List<PlantaDB> plantas = [];
-    if (maps.length > 0) {
+    if (maps.isNotEmpty) {
       for (int i = 0; i < maps.length; i++) {
         plantas.add(PlantaDB.fromMap(maps[i]));
       }
@@ -75,12 +75,12 @@ class DBHelperPlanta {
 
   Future<int> delete(int id) async {
     var dbClient = await db;
-    return await dbClient.delete(TABLE, where: '$ID = ?', whereArgs: [id]);
+    return await dbClient.delete(nomeTabela, where: '$ID = ?', whereArgs: [id]);
   }
 
   Future<int> update(PlantaDB planta) async {
     var dbClient = await db;
-    return await dbClient.update(TABLE, planta.toMap(),
+    return await dbClient.update(nomeTabela, planta.toMap(),
         where: '$ID = ?', whereArgs: [planta.id]);
   }
 

@@ -106,15 +106,6 @@ class _ListaPlantasState extends State<ListaPlantas> {
             .map(
               (planta) => DataRow(cells: [
                 DataCell(
-                  Text('${planta.coletaId}'),
-                  onTap: () {
-                    setState(() {
-                      // isUpdating = true;
-                      curPlantaId = planta.id;
-                    });
-                  },
-                ),
-                DataCell(
                   Text('${planta.numeroColeta}'),
                   onTap: () {
                     setState(() {

@@ -128,7 +128,7 @@ class Planta {
         fruto: map[PlantaFields.fruto] as String,
         substrato: map[PlantaFields.substrato] as String,
         ambiente: map[PlantaFields.ambiente] as String,
-        relevo: map[PlantaFields.relevo] as int,
+        relevo: int.parse(map[PlantaFields.relevo]) as int,
         coordenada: map[PlantaFields.coordenada] as String,
         observacao: map[PlantaFields.observacao] as String,
         coletaId: map[PlantaFields.coletaId] as int,
