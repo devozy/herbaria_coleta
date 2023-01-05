@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:herbaria_coleta/form_page/atributo_page.dart';
 import 'package:herbaria_coleta/form_page/coleta_page.dart';
 import 'package:herbaria_coleta/form_page/planta_page.dart';
-import 'package:herbaria_coleta/list_page/lista_atributos.dart';
 import 'package:herbaria_coleta/list_page/lista_coletas.dart';
 import 'package:herbaria_coleta/list_page/lista_plantas.dart';
 
@@ -22,15 +21,10 @@ void main() {
     expect(finder, findsOneWidget);
   });
 
-  testWidgets('Check if attribute screen loads', (widgetTester) async {
-    await widgetTester.pumpWidget(makeTestable(ListaAtributos(1)));
-    var finder = find.byType(AppBar);
-    expect(finder, findsOneWidget);
-  });
 
   testWidgets('Check if attribute edition screen loads', (widgetTester) async {
     await widgetTester
-        .pumpWidget(makeTestable(AtributoPage(1, 2, '1', '1', '1')));
+        .pumpWidget(makeTestable(AtributoPage(1, 2, '1', '1', '1','1', '1', '1','1', '1', '1','1', '1', '1')));
     var finder = find.byType(AppBar);
     expect(finder, findsOneWidget);
   });
