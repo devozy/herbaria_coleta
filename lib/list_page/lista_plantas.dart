@@ -207,16 +207,22 @@ class _ListaPlantasState extends State<ListaPlantas> {
                   },
                   child: Text(
                       //  isUpdating ? 'Nova Coleta' :
-                      'Editar Lista de Plantas'),
+                      'Adicionar Espécime'),
                 ),
-                ElevatedButton(
+
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.refresh,
+                    size: 24.0,
+                  ),
+                  label: const Text(''),
                   onPressed: () {
                     setState(() {
                       refreshList();
                     });
                   },
-                  child: Text('Atualizar'),
                 ),
+
                 ElevatedButton(
                   onPressed: () {
                     setState(() {

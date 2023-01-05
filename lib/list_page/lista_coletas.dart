@@ -198,13 +198,17 @@ class _ListaColetasState extends State<ListaColetas> {
                   },
                   child: Text('Editar Lista de Coletas'),
                 ),
-                ElevatedButton(
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.refresh,
+                    size: 24.0,
+                  ),
+                  label: const Text(''),
                   onPressed: () {
                     setState(() {
                       refreshList();
                     });
                   },
-                  child: Text('Atualizar'),
                 )
               ],
             ),
