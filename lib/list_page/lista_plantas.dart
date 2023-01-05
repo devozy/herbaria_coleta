@@ -71,7 +71,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
 
   refreshList() {
     setState(() {
-      plantas = dbHelper.findAll();
+      plantas = dbHelper.findByColeta(cur_coletaId);
     });
   }
 
@@ -151,7 +151,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                AtributoPage(planta.id, planta.coletaId, planta.numeroColeta, planta.genero, planta.epiteto)));
+                                AtributoPage(planta.id, planta.coletaId, planta.numeroColeta, planta.familia, planta.genero, planta.epiteto, planta.altura, planta.flor, planta.fruto, planta.substrato, planta.ambiente, planta.relevo, planta.coordenada, planta.observacao)));
                   },
                 )),
               ]),

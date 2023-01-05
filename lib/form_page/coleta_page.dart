@@ -7,7 +7,8 @@ import 'package:herbaria_coleta/models/coleta.dart';
 int cur_coletaId;
 
 class ColetaPage extends StatefulWidget {
-  ColetaPage(int curColetaId){
+  ColetaPage(int curColetaId)
+  {
     cur_coletaId = curColetaId;
   }
 

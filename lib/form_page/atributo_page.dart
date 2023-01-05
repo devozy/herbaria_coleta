@@ -10,17 +10,51 @@ import '../models/planta.dart';
 int cur_plantaId;
 int cur_coletaId;
 String cur_plantaNumero;
+String cur_plantaFamilia;
 String cur_plantaGenero;
 String cur_plantaEpiteto;
+String cur_plantaAltura;
+String cur_plantaFlor;
+String cur_plantaFruto;
+String cur_plantaSubstrato;
+String cur_plantaAmbiente;
+String cur_plantaRelevo;
+String cur_plantaCoordenada;
+String cur_plantaObservacao;
 
 
 class AtributoPage extends StatefulWidget {
-  AtributoPage(int plantaId, int coletaId, String numero, String genero, String epiteto){
+  AtributoPage(
+      int plantaId
+      , int coletaId
+      , String numero
+      , String familia
+      , String genero
+      , String epiteto
+      , String altura
+      , String flor
+      , String fruto
+      , String substrato
+      , String ambiente
+      , String relevo
+      , String coordenada
+      , String observacao)
+  {
     cur_plantaId = plantaId;
     cur_coletaId = coletaId;
     cur_plantaNumero = numero;
+    cur_plantaFamilia = familia;
     cur_plantaGenero = genero;
     cur_plantaEpiteto = epiteto;
+    cur_plantaAltura = altura;
+    cur_plantaFlor = flor;
+    cur_plantaFruto = fruto;
+    cur_plantaSubstrato = substrato;
+    cur_plantaAmbiente = ambiente;
+    cur_plantaRelevo = relevo;
+    cur_plantaCoordenada = coordenada;
+    cur_plantaObservacao = observacao;
+
   }
 
   @override
@@ -71,6 +105,8 @@ class _AtributoPageState extends State<AtributoPage> {
     db = PlantaDatabase.instance;
     isUpdating = false;
     refreshList();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {updateFields();
+    });
   }
 
   refreshList() {
@@ -141,13 +177,20 @@ class _AtributoPageState extends State<AtributoPage> {
     }
   }
 
-  // updateFields(coleta) {
-  //   controllerProjeto.text = coleta.projeto;
-  //   controllerColetor.text = coleta.coletor;
-  //   controllerEstado.text = coleta.estado;
-  //   controllerMunicipio.text = coleta.municipio;
-  //   controllerData.text = coleta.data;
-  // }
+  updateFields() {
+    controllerNumeroColeta.text = cur_plantaNumero;
+    controllerFamilia.text = cur_plantaFamilia;
+    controllerGenero.text = cur_plantaGenero;
+    controllerEpiteto.text = cur_plantaEpiteto;
+    controllerAltura.text = cur_plantaAltura;
+    controllerFlor.text = cur_plantaFlor;
+    controllerFruto.text = cur_plantaFruto;
+    controllerSubstrato.text = cur_plantaSubstrato;
+    controllerAmbiente.text = cur_plantaAmbiente;
+    controllerRelevo.text = cur_plantaRelevo;
+    controllerCoordenada.text = cur_plantaCoordenada;
+    controllerObservacao.text = cur_plantaObservacao;
+  }
 
   form() {
     return Flexible(
@@ -339,7 +382,8 @@ class _AtributoPageState extends State<AtributoPage> {
                             setState(() {
                               isUpdating = true;
                             });
-                            validate;
+                            db.deleteById(cur_plantaId);
+                            clearAll();
                             FocusScope.of(context).unfocus();
                           },
                           child: Text('Excluir'),
@@ -373,6 +417,7 @@ class _AtributoPageState extends State<AtributoPage> {
           children: <Widget>[
             form(),
   //          list(),
+
           ],
         ),
       ),
