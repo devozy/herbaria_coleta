@@ -41,7 +41,7 @@ class ColetaDatabase {
     await db.execute('''
     CREATE TABLE $tablePlanta (
     ${PlantaFields.id} ${Helpers.idType},
-    ${PlantaFields.numeroColeta} ${Helpers.intType},
+    ${PlantaFields.numeroColeta} ${Helpers.textType},
     ${PlantaFields.familia} ${Helpers.textType},
     ${PlantaFields.genero} ${Helpers.textType},
     ${PlantaFields.epiteto} ${Helpers.textType},

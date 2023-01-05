@@ -106,7 +106,7 @@ class _PlantaPageState extends State<PlantaPage> {
       }
       else {
         Planta planta = Planta(
-            id: null,
+           // id: null,
             numeroColeta: controllerNumeroColeta.text,
             familia: controllerFamilia.text,
             genero: controllerGenero.text,
@@ -148,7 +148,7 @@ class _PlantaPageState extends State<PlantaPage> {
                   border: OutlineInputBorder()),
               controller: controllerNumeroColeta,
               keyboardType: TextInputType.number,
-              //            validator: (val) => val.length == 0 ? 'Número de coleta obrigatório!' : null,
+//              validator: (val) => val.length == 0 ? 'Enter Name' : null,
               onSaved: (val) => numeroColeta = val,
             ),
             const Espaco(),

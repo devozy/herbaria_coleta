@@ -9,7 +9,7 @@ import 'package:herbaria_coleta/models/planta.dart';
 class ListaAtributos extends StatefulWidget {
   final String title;
 
-  ListaAtributos({Key key, this.title}) : super(key: key);
+  ListaAtributos(int id, {Key key, this.title}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {

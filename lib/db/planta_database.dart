@@ -45,6 +45,20 @@ class PlantaDatabase {
     }
   }
 
+  Future<Planta> findByColeta(int id) async {
+    final db = await instance.database;
+    final maps = await db.query(tablePlanta,
+        columns: PlantaFields.values,
+        where: '${PlantaFields.coletaId} = ?',
+        whereArgs: [id]);
+    if (maps.isNotEmpty) {
+      return Planta.fromMap(maps.first);
+    } else {
+      throw Exception('Coleta $id not found');
+    }
+  }
+
+
   Future<List<Planta>> findAll() async {
     final db = await instance.database;
 

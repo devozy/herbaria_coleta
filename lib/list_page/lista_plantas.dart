@@ -6,6 +6,8 @@ import 'package:herbaria_coleta/form_page/planta_page.dart';
 import 'package:herbaria_coleta/list_page/lista_atributos.dart';
 import 'package:herbaria_coleta/models/planta.dart';
 
+import '../form_page/atributo_page.dart';
+
 int cur_coletaId;
 String cur_coletaProjeto;
 String cur_coletaData;
@@ -18,7 +20,7 @@ class ListaPlantas extends StatefulWidget {
   ) {
     cur_coletaId = coleta;
     cur_coletaProjeto = projeto;
-    cur_coletaData = data;
+    cur_coletaData = data.substring(0,10);
   }
 
   @override
@@ -43,7 +45,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
   TextEditingController controllerObservacao = TextEditingController();
 
   int curPlantaId;
-  int numeroColeta;
+  String numeroColeta;
   String familia;
   String genero;
   String epiteto;
@@ -52,7 +54,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
   String fruto;
   String substrato;
   String ambiente;
-  int relevo;
+  String relevo;
   String coordenada;
   String observacao;
   int curColetaId;
@@ -96,9 +98,6 @@ class _ListaPlantasState extends State<ListaPlantas> {
             label: Text('Família'),
           ),
           DataColumn(
-            label: Text('Obervação'),
-          ),
-          DataColumn(
             label: Text(''),
           )
         ],
@@ -106,13 +105,13 @@ class _ListaPlantasState extends State<ListaPlantas> {
             .map(
               (planta) => DataRow(cells: [
                 DataCell(
-                  Text('${planta.numeroColeta}'),
+                  Text(planta.numeroColeta),
                   onTap: () {
                     setState(() {
                       // isUpdating = true;
                       curPlantaId = planta.id;
                     });
-                    controllerNumeroColeta.text = planta.numeroColeta as String;
+                    controllerNumeroColeta.text = planta.numeroColeta;
                   },
                 ),
                 DataCell(
@@ -145,16 +144,6 @@ class _ListaPlantasState extends State<ListaPlantas> {
                     controllerFamilia.text = planta.familia;
                   },
                 ),
-                DataCell(
-                  Text(planta.observacao),
-                  onTap: () {
-                    setState(() {
-                      //                    isUpdating = true;
-                      curPlantaId = planta.id;
-                    });
-                    controllerObservacao.text = planta.observacao;
-                  },
-                ),
                 DataCell(IconButton(
                   icon: Icon(Icons.arrow_right),
                   onPressed: () {
@@ -162,7 +151,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                ListaAtributos()));
+                                AtributoPage(planta.id, planta.coletaId, planta.numeroColeta, planta.genero, planta.epiteto)));
                   },
                 )),
               ]),
@@ -228,6 +217,14 @@ class _ListaPlantasState extends State<ListaPlantas> {
                     });
                   },
                   child: Text('Atualizar'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      refreshList();
+                    });
+                  },
+                  child: Text('Exportar'),
                 )
               ],
             ),

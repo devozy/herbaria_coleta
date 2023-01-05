@@ -14,7 +14,7 @@ class PlantaDB {
   String observacao;
   int idColeta;
 
-  PlantaDB(this.id, this.numeroColeta, this.familia, this.genero, this.epiteto, this.altura, this.flor, this.fruto, this.substrato, this.ambiente, this.relevo, this.coordenada, this.observacao, this.idColeta);
+  PlantaDB(this.id, this.numeroColeta,  this.familia, this.genero, this.epiteto, this.altura, this.flor, this.fruto, this.substrato, this.ambiente, this.relevo, this.coordenada, this.observacao, this.idColeta);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
