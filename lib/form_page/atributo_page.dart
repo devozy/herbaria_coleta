@@ -103,7 +103,7 @@ class _AtributoPageState extends State<AtributoPage> {
   void initState() {
     super.initState();
     db = PlantaDatabase.instance;
-    isUpdating = false;
+    isUpdating = true;
     refreshList();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {updateFields();
     });
@@ -132,10 +132,10 @@ class _AtributoPageState extends State<AtributoPage> {
 
   validate() {
     if (formKey.currentState.validate()) {
-      formKey.currentState.save();
+   //   formKey.currentState.save();
       if (isUpdating) {
         Planta planta = Planta(
-            id: curPlantaId,
+            id: cur_plantaId,
             numeroColeta: controllerNumeroColeta.text,
             familia: controllerFamilia.text,
             genero: controllerGenero.text,
@@ -151,7 +151,7 @@ class _AtributoPageState extends State<AtributoPage> {
             coletaId: cur_coletaId);
         db.update(planta);
         setState(() {
-          isUpdating = false;
+          //isUpdating = false;
         });
       } else {
         Planta planta = Planta(
@@ -170,7 +170,7 @@ class _AtributoPageState extends State<AtributoPage> {
             coletaId: cur_coletaId);
         db.save(planta);
 
-        db.save(planta);
+   //     db.save(planta);
       }
       clearAll();
       refreshList();
@@ -368,13 +368,7 @@ class _AtributoPageState extends State<AtributoPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              isUpdating = true;
-                            });
-                            validate;
-                            FocusScope.of(context).unfocus();
-                          },
+                          onPressed: validate,
                           child: Text('ATUALIZAR'),
                         ),
                         ElevatedButton(

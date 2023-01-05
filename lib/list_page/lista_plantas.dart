@@ -3,7 +3,6 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:herbaria_coleta/db/planta_database.dart';
 import 'package:herbaria_coleta/form_page/planta_page.dart';
-import 'package:herbaria_coleta/list_page/lista_atributos.dart';
 import 'package:herbaria_coleta/models/planta.dart';
 
 import '../form_page/atributo_page.dart';
