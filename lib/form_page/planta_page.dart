@@ -33,7 +33,7 @@ class _PlantaPageState extends State<PlantaPage> {
   TextEditingController controllerObservacao = TextEditingController();
 
   int curPlantaId;
-  int numeroColeta;
+  String numeroColeta;
   String familia;
   String genero;
   String epiteto;
@@ -42,7 +42,7 @@ class _PlantaPageState extends State<PlantaPage> {
   String fruto;
   String substrato;
   String ambiente;
-  int relevo;
+  String relevo;
   String coordenada;
   String observacao;
   int idColeta;
@@ -85,7 +85,7 @@ class _PlantaPageState extends State<PlantaPage> {
       if (isUpdating) {
         Planta planta = Planta(
             id: curPlantaId,
-            numeroColeta: int.parse(controllerNumeroColeta.text),
+            numeroColeta: controllerNumeroColeta.text,
             familia: controllerFamilia.text,
             genero: controllerGenero.text,
             epiteto: controllerEpiteto.text,
@@ -94,7 +94,7 @@ class _PlantaPageState extends State<PlantaPage> {
             fruto: controllerFruto.text,
             substrato: controllerSubstrato.text,
             ambiente: controllerAmbiente.text,
-            relevo: int.parse(controllerRelevo.text),
+            relevo: controllerRelevo.text,
             coordenada: controllerCoordenada.text,
             observacao: controllerObservacao.text,
             coletaId: cur_coletaId
@@ -107,7 +107,7 @@ class _PlantaPageState extends State<PlantaPage> {
       else {
         Planta planta = Planta(
             id: null,
-            numeroColeta: int.parse(controllerNumeroColeta.text),
+            numeroColeta: controllerNumeroColeta.text,
             familia: controllerFamilia.text,
             genero: controllerGenero.text,
             epiteto: controllerEpiteto.text,
@@ -116,7 +116,7 @@ class _PlantaPageState extends State<PlantaPage> {
             fruto: controllerFruto.text,
             substrato: controllerSubstrato.text,
             ambiente: controllerAmbiente.text,
-            relevo: int.parse(controllerRelevo.text),
+            relevo: controllerRelevo.text,
             coordenada: controllerCoordenada.text,
             observacao: controllerObservacao.text,
             coletaId: cur_coletaId);
@@ -147,9 +147,9 @@ class _PlantaPageState extends State<PlantaPage> {
                   ),
                   border: OutlineInputBorder()),
               controller: controllerNumeroColeta,
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
               //            validator: (val) => val.length == 0 ? 'Número de coleta obrigatório!' : null,
-              onSaved: (val) => numeroColeta = int.parse(val),
+              onSaved: (val) => numeroColeta = val,
             ),
             const Espaco(),
             TextFormField(
@@ -202,7 +202,7 @@ class _PlantaPageState extends State<PlantaPage> {
                   ),
                   border: OutlineInputBorder()),
               controller: controllerAltura,
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
 //              validator: (val) => val.length == 0 ? 'Enter Name' : null,
               onSaved: (val) => altura = val,
             ),
@@ -268,8 +268,8 @@ class _PlantaPageState extends State<PlantaPage> {
                   ),
                   border: OutlineInputBorder()),
               controller: controllerRelevo,
-              keyboardType: TextInputType.text,
-              onSaved: (val) => relevo = int.parse(val),
+              keyboardType: TextInputType.number,
+              onSaved: (val) => relevo = val,
             ),
             const Espaco(),
             TextFormField(

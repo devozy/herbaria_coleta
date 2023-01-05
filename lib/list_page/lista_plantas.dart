@@ -83,7 +83,7 @@ class _ListaPlantasState extends State<ListaPlantas> {
         columns: const [
           DataColumn(
             label: Text(
-              'Nº Coleta',
+              'Nº',
             ),
           ),
           DataColumn(

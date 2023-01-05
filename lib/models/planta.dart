@@ -36,7 +36,7 @@ class PlantaFields {
 
 class Planta {
   final int id;
-  final int numeroColeta;
+  final String numeroColeta;
   final String familia;
   final String genero;
   final String epiteto;
@@ -45,7 +45,7 @@ class Planta {
   final String fruto;
   final String substrato;
   final String ambiente;
-  final int relevo;
+  final String relevo;
   final String coordenada;
   final String observacao;
   final int coletaId;
@@ -86,16 +86,16 @@ class Planta {
 
   Planta copy({
     int id,
-    int numeroColeta,
+    String numeroColeta,
     String familia,
     String genero,
     String epiteto,
-    double altura,
+    String altura,
     String flor,
     String fruto,
     String substrato,
     String ambiente,
-    int relevo,
+    String relevo,
     String coordenada,
     String observacao,
     int coletaId,
@@ -119,7 +119,7 @@ class Planta {
 
   static Planta fromMap(Map<String, dynamic> map) => Planta(
         id: map[PlantaFields.id] as int,
-        numeroColeta: map[PlantaFields.numeroColeta] as int,
+        numeroColeta: map[PlantaFields.numeroColeta] as String,
         familia: map[PlantaFields.familia] as String,
         genero: map[PlantaFields.genero] as String,
         epiteto: map[PlantaFields.epiteto] as String,
@@ -128,7 +128,7 @@ class Planta {
         fruto: map[PlantaFields.fruto] as String,
         substrato: map[PlantaFields.substrato] as String,
         ambiente: map[PlantaFields.ambiente] as String,
-        relevo: int.parse(map[PlantaFields.relevo]) as int,
+        relevo: map[PlantaFields.relevo] as String,
         coordenada: map[PlantaFields.coordenada] as String,
         observacao: map[PlantaFields.observacao] as String,
         coletaId: map[PlantaFields.coletaId] as int,
